@@ -1,3 +1,4 @@
 # Hearing-Aid-app
 
-Please find the MainActivity.java at  Hearing-Aid-app/beta_hear/app/src/main/java/com/example/rohan/beta_hear/MainActivity.java 
+To run the app on Android Studio, download/clone the beta_hear folder.
+To review the code, you may use the MainActivity.java file.
