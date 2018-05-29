@@ -16,56 +16,67 @@ import static android.media.AudioFormat.ENCODING_PCM_FLOAT;
 import static android.media.AudioManager.AUDIO_SESSION_ID_GENERATE;
 import static android.media.AudioManager.STREAM_MUSIC;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener
+{
 
+    int number_frequencies = 8;
+    int number_intensities = 15;
     Button play;
     Button heard_it;
-    ProgressBar progressBar;
-    SeekBar seekBar; // for duration
+    ProgressBar intensity_progressbar;
+    ProgressBar frequency_progressbar;
+    SeekBar duration_bar; // for duration
     AudioTrack audioTrack;
     TextView textView; // to display the intensity level at which the user hears the sound
-    PlayTask playTask = new PlayTask();
+    PlayTask playTask;
 
-    void initViews() {
+    private void initViews() {
         setContentView(R.layout.activity_main);
-        play = findViewById(R.id.button1);
-        heard_it = findViewById(R.id.button2);
-        progressBar = findViewById(R.id.pb1);
-        seekBar = findViewById(R.id.seekBar);
-        textView = findViewById(R.id.textView2);
+        play = findViewById(R.id.button_play1);
+        heard_it = findViewById(R.id.button_hear1);
+        duration_bar = findViewById(R.id.seekBar);
+        intensity_progressbar = findViewById(R.id.pb1);
+        intensity_progressbar.setMax(number_intensities);
+        frequency_progressbar = findViewById(R.id.pb2);
+        frequency_progressbar.setMax(number_frequencies);
+        textView = findViewById(R.id.textView1);
         textView.setText("Decibels");
-        progressBar.setMax(15);
-        seekBar.setMax(200);
-        seekBar.setProgress(180);
-    }
+        duration_bar.setMax(200);
+        duration_bar.setProgress(180);
+        play.setOnClickListener(this);
+        play.setText("500 Hz");
+        heard_it.setOnClickListener(this);
+}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
-        play.setOnClickListener(this);
-        heard_it.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button1:
-                int max = progressBar.getMax();
-                playTask.execute(max);
+            case R.id.button_play1:
+                /*if(playTask.isCancelled())
+                    playTask = new PlayTask();*/
+                playTask = new PlayTask();
+                int freq = frequency_progressbar.getProgress();
+                playTask.execute(freq);
                 break;
-            case R.id.button2:
+            case R.id.button_hear1:
                 playTask.cancel(true);
+
         }
     }
 
     private class PlayTask extends AsyncTask <Integer, Integer, Integer> {
 
         @Override
-        protected Integer doInBackground(Integer... max) {
-            for (int i = 0; i <= max[0]; i++) {
-                double secs = 2.1;
-                publishProgress(i);
+        protected Integer doInBackground(Integer... freq) {
+            for (int i = 0; i <= intensity_progressbar.getMax(); i++) {
+                double secs = (duration_bar.getProgress() / 100) + 0.2;
+                publishProgress(freq[0]);
                 try {
                     Thread.sleep((long) (secs * 1000));
                 } catch (InterruptedException e) {
@@ -74,9 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (isCancelled())
                     break;
             }
-            return progressBar.getProgress();   //for the onCancelled()
+            return intensity_progressbar.getProgress();   //for the onCancelled()
         }
-
         private int getIntensity(int progress) { // return the intensity level in dB from the progress
             int intensity;
             switch (progress) {
@@ -134,26 +144,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             return intensity;
         }
+        private int getFrequency(int progress) {
+            int frequency;
+            switch (progress) {
+                case 0:
+                    frequency = 500;
+                    break;
+                case 1:
+                    frequency = 1250;
+                    break;
+                case 2:
+                    frequency = 1750;
+                    break;
+                case 3:
+                    frequency = 2250;
+                    break;
+                case 4:
+                    frequency = 2750;
+                    break;
+                case 5:
+                    frequency = 3250;
+                    break;
+                case 6:
+                    frequency = 3750;
+                    break;
+                case 7:
+                    frequency = 4250;
+                    break;
+                default:
+                    frequency = 3200;
+            }
+            return frequency;
+        }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            double duration = seekBar.getProgress() / 100;
-            int progress = progressBar.getProgress();
-            int intensity = getIntensity(progress);
-            PlayAudioTrack(500, duration, intensity);
-            progressBar.incrementProgressBy(1);
+            double duration = duration_bar.getProgress() / 100;
+            int intensity = getIntensity(intensity_progressbar.getProgress());
+            int frequency = getFrequency(values[0]);
+            PlayAudioTrack(frequency, duration, intensity);
+            intensity_progressbar.incrementProgressBy(1);
         }
 
         @Override
         protected void onCancelled(Integer result) { // to play when the heard button is clicked
+            frequency_progressbar.incrementProgressBy(1);
             int intensity = getIntensity(result);
             textView.setText(String.valueOf(intensity));
             textView.append("dB");
+            intensity_progressbar.setProgress(0);
+            int frequency = getFrequency(frequency_progressbar.getProgress());
+            String freq_text = String.valueOf(frequency);
+            freq_text += " Hz";
+            play.setText(freq_text);
         }
     }
 
-    public void PlayAudioTrack(int f, double duration, int intensity) {
+    public void PlayAudioTrack(int frequency, double duration, int intensity) {
         int sampleRate = 48000;        // Samples per second
         double numFrames = sampleRate * duration;
         double frameCounter = 0;
@@ -181,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int toWrite = (remaining > bufsize) ? bufsize : (int) remaining;
 
             for (int s = 0; s < toWrite; s++, frameCounter++) {
-                buffer[s] = (float) (amplitude * Math.sin(2.0 * Math.PI * f * frameCounter / sampleRate));
+                buffer[s] = (float) (amplitude * Math.sin(2.0 * Math.PI * frequency * frameCounter / sampleRate));
             }
             audioTrack.write(buffer, 0, bufsize, AudioTrack.WRITE_BLOCKING);
             audioTrack.play();
