@@ -145,35 +145,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int frequency;
             switch (progress) {
                 case 0:
-                    frequency = 500;
+                    frequency = 100;
                     break;
                 case 1:
-                    frequency = 1250;
+                    frequency = 200;
                     break;
                 case 2:
-                    frequency = 1750;
+                    frequency = 400;
                     break;
                 case 3:
-                    frequency = 2250;
+                    frequency = 800;
                     break;
                 case 4:
-                    frequency = 2750;
+                    frequency = 1600;
                     break;
                 case 5:
-                    frequency = 3250;
+                    frequency = 3200;
                     break;
                 case 6:
-                    frequency = 3750;
+                    frequency = 6400;
                     break;
                 case 7:
-                    frequency = 4250;
+                    frequency = 12800;
                     break;
                 default:
                     frequency = 3200;
             }
             return frequency;
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
@@ -183,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             PlayAudioTrack(frequency, duration, intensity);
             intensity_progressbar.incrementProgressBy(1);
         }
-
         @Override
         protected void onCancelled(Integer result) { // to play when the heard button is clicked
             frequency_progressbar.incrementProgressBy(1);
