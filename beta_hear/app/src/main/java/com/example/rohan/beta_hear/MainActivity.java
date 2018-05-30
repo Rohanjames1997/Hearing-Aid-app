@@ -47,13 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         play.setText("500 Hz");
         heard_it.setOnClickListener(this);
 }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViews();
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
-
     private class PlayTask extends AsyncTask <Integer, Integer, Integer> {
 
         @Override
@@ -200,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             play.setText(freq_text);
         }
     }
-
     public void PlayAudioTrack(int frequency, double duration, int intensity) {
         int sampleRate = 48000;        // Samples per second
         double numFrames = sampleRate * duration;

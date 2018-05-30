@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="120dp"
         android:layout_height="22dp"
         android:layout_marginStart="32dp"
@@ -20,24 +21,23 @@
         android:id="@+id/button_play1"
         android:layout_width="110dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="116dp"
-        android:text="@string/_500_hz"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Hz"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <ProgressBar
         android:id="@+id/pb1"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="94dp"
-        android:layout_height="58dp"
-        android:layout_marginEnd="340dp"
-        android:layout_marginTop="112dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="110dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="124dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_hear1"
+        app:layout_constraintStart_toEndOf="@+id/button_play1"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
@@ -45,25 +45,53 @@
         android:id="@+id/seekBar"
         android:layout_width="152dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginTop="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewDuration"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginEnd="73dp"
+        android:layout_marginStart="121dp"
+        android:layout_marginTop="68dp"
         android:text="Duration (0-2)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.54"
+        app:layout_constraintEnd_toStartOf="@+id/seekBar"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_hear1"
+        android:layout_width="110dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginTop="116dp"
+        android:text="Heard"
+        app:layout_constraintEnd_toStartOf="@+id/textView1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="103dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="132dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/pb2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="48dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_play1" />
 
 </android.support.constraint.ConstraintLayout>
