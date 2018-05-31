@@ -18,7 +18,7 @@ import static android.media.AudioManager.STREAM_MUSIC;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
-
+    int trial;
     int number_frequencies = 8;
     int number_intensities = 15;
     Button play;
@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         frequency_progressbar = findViewById(R.id.pb2);
         frequency_progressbar.setMax(number_frequencies);
         textView = findViewById(R.id.textView1);
-        textView.setText("Decibels");
+        textView.setText("Trial 1");
         duration_bar.setMax(200);
         duration_bar.setProgress(180);
         play.setOnClickListener(this);
-        play.setText("500 Hz");
+        play.setText("100 Hz");
         heard_it.setOnClickListener(this);
 }
     @Override
@@ -58,13 +58,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_play1:
                 /*if(playTask.isCancelled())
                     playTask = new PlayTask();*/
+                trial=1;
                 playTask = new PlayTask();
                 int freq = frequency_progressbar.getProgress();
                 playTask.execute(freq);
                 break;
             case R.id.button_hear1:
                 playTask.cancel(true);
-
+                break;
         }
     }
     private class PlayTask extends AsyncTask <Integer, Integer, Integer> {
@@ -88,52 +89,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int intensity;
             switch (progress) {
                 case 0:
-                    intensity = -95;
+                    intensity = -105;
                     break;
                 case 1:
-                    intensity = -85;
+                    intensity = -95;
                     break;
                 case 2:
-                    intensity = -75;
+                    intensity = -85;
                     break;
                 case 3:
-                    intensity = -70;
+                    intensity = -80;
                     break;
                 case 4:
-                    intensity = -65;
+                    intensity = -75;
                     break;
                 case 5:
-                    intensity = -60;
+                    intensity = -70;
                     break;
                 case 6:
-                    intensity = -55;
+                    intensity = -65;
                     break;
                 case 7:
-                    intensity = -50;
+                    intensity = -60;
                     break;
                 case 8:
-                    intensity = -45;
+                    intensity = -55;
                     break;
                 case 9:
-                    intensity = -40;
+                    intensity = -50;
                     break;
                 case 10:
-                    intensity = -35;
+                    intensity = -45;
                     break;
                 case 11:
-                    intensity = -30;
+                    intensity = -40;
                     break;
                 case 12:
-                    intensity = -25;
+                    intensity = -35;
                     break;
                 case 13:
-                    intensity = -20;
+                    intensity = -30;
                     break;
                 case 14:
-                    intensity = -15;
+                    intensity = -25;
                     break;
                 case 15:
-                    intensity = -10;
+                    intensity = -20;
                     break;
                 default:
                     intensity = -50;
@@ -184,15 +185,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         @Override
         protected void onCancelled(Integer result) { // to play when the heard button is clicked
-            frequency_progressbar.incrementProgressBy(1);
-            int intensity = getIntensity(result);
-            textView.setText(String.valueOf(intensity));
-            textView.append("dB");
-            intensity_progressbar.setProgress(0);
-            int frequency = getFrequency(frequency_progressbar.getProgress());
-            String freq_text = String.valueOf(frequency);
-            freq_text += " Hz";
-            play.setText(freq_text);
+
+            if(trial!=3)
+            {
+                intensity_progressbar.setProgress(intensity_progressbar.getProgress()-3);
+                trial++;
+                playTask = new PlayTask();
+                int freq = frequency_progressbar.getProgress();
+                playTask.execute(freq);
+                textView.setText("Trial "+trial);
+            }
+            else
+            {
+                frequency_progressbar.incrementProgressBy(1);
+                int intensity = getIntensity(result);
+                textView.setText(String.valueOf(intensity));
+                textView.append("dB");
+                intensity_progressbar.setProgress(0);
+                int frequency = getFrequency(frequency_progressbar.getProgress());
+                String freq_text = String.valueOf(frequency);
+                freq_text += " Hz";
+                play.setText(freq_text);
+                trial=1;
+            }
+
         }
     }
     public void PlayAudioTrack(int frequency, double duration, int intensity) {
